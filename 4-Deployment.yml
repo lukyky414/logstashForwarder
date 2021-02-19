@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash
+  namespace: openshift-logging
+  labels:
+    app: logstash
+    app.kubernetes.io/component: logstash
+    app.kubernetes.io/instance: logstash
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: logstash
+  template:
+    metadata:
+      labels:
+        deployment: logstash
+    spec:
+      containers:
+        - image: docker.elastic.co/logstash/logstash:7.11.1
+          name: logstash-application
+          metadata:
+            labels:
+              app: logstash
+              logstash: application
+          ports:
+            - containerPort: 5044
+              protocol: TCP
+          volumeMounts:
+          - name: pipeline-application
+            mountPath: /usr/share/logstash/pipeline/
+          - name: config-application
+            mountPath: /usr/share/logstash/config/
+        - image: docker.elastic.co/logstash/logstash:7.11.1
+          name: logstash-infrastructure
+          metadata:
+            labels:
+              app: logstash
+              logstash: infrastructure
+          ports:
+            - containerPort: 5045
+              protocol: TCP
+          volumeMounts:
+          - name: pipeline-infrastructure
+            mountPath: /usr/share/logstash/pipeline/
+          - name: config-application
+            mountPath: /usr/share/logstash/config/
+        - image: docker.elastic.co/logstash/logstash:7.11.1
+          name: logstash-audit
+          metadata:
+            labels:
+              app: logstash
+              logstash: audit
+          ports:
+            - containerPort: 5046
+              protocol: TCP
+          volumeMounts:
+          - name: pipeline-audit
+            mountPath: /usr/share/logstash/pipeline/
+          - name: config-application
+            mountPath: /usr/share/logstash/config/
+      volumes:
+        - name: pipeline-application
+          configMap: 
+            name: logstash-pipeline
+            items:
+            - key: application.conf
+              path: pipeline.conf
+        - name: pipeline-infrastructure
+          configMap: 
+            name: logstash-pipeline
+            items:
+            - key: infrastructure.conf
+              path: pipeline.conf
+        - name: pipeline-audit
+          configMap: 
+            name: logstash-pipeline
+            items:
+            - key: audit.conf
+              path: pipeline.conf
+        - name: config-application
+          configMap: 
+            name: logstash-config
+            items:
+            - key: application.yml
+              path: logstash.yml
+        - name: config-infrastructure
+          configMap: 
+            name: logstash-config
+            items:
+            - key: infrastructure.yml
+              path: logstash.yml
+        - name: config-audit
+          configMap: 
+            name: logstash-config
+            items:
+            - key: audit.yml
+              path: logstash.yml

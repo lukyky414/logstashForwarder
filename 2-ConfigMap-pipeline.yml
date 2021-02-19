@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-pipeline
+  namespace: openshift-logging
+data:
+  application.conf: |
+    input {
+      tcp {
+        port => 5044
+        type => syslog
+      }
+    }
+    filter {
+    }
+    output {
+      stdout {}
+    }
+  infrastructure.conf: |
+    input {
+      tcp {
+        port => 5045
+        type => syslog
+      }
+    }
+    filter {
+    }
+    output {
+      stdout {}
+    }
+  audit.conf: |
+    input {
+      tcp {
+        port => 5046
+        type => syslog
+      }
+    }
+    filter {
+    }
+    output {
+      stdout {}
+    }
