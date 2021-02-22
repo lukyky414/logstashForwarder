@@ -36,7 +36,21 @@ data:
       }
     }
     filter {
+      #ruby {
+      #  path => "/usr/share/logstash/ruby_filter/main.rb"
+      #}
+      #kv {
+      #  field_split_pattern => "\\t"
+      #  value_split => ":"
+      #}
     }
     output {
       stdout {}
     }
+  audit.rb: |
+    def filter(event):
+      message = event.get("message")
+      formate = message[/.* - - - (.*)/, 1]
+      event.set("message", formate)
+      return [event]
+    end
