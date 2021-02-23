@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-ruby
+  namespace: openshift-logging
+data:
+  main.rb: |
+    def filter(event)
+      message = event.get("message")
+      debut = message[/.* .* (.* .*) - - - .*/, 1]
+      formate = message[/.* - - - (.*)/, 1]
+      formate.sub! '@timestamp', 'timestamp'
+
+      event.set("message", "pod:"+debut+"\t"+formate)
+      return [event]
+    end
