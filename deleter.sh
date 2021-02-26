@@ -4,4 +4,6 @@ oc delete deployment           logstash          -n openshift-logging
 oc delete configmaps           logstash-config   -n openshift-logging
 oc delete configmaps           logstash-pipeline -n openshift-logging
 oc delete configmaps           logstash-ruby     -n openshift-logging
+oc delete configmaps           splunk-config     -n openshift-logging
+oc delete secret               splunk-token      -n openshift-logging
 oc delete clusterloggings      instance          -n openshift-logging

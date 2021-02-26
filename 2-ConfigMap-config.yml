@@ -6,10 +6,10 @@ metadata:
 data:
   application.yml: |
     path:
-      config: /usr/share/logstash/pipeline/pipeline.conf
+      config: /usr/share/logstash/pipeline/
   infrastructure.yml: |
     path:
-      config: /usr/share/logstash/pipeline/pipeline.conf
+      config: /usr/share/logstash/pipeline/
   audit.yml: |
     path:
-      config: /usr/share/logstash/pipeline/pipeline.conf
+      config: /usr/share/logstash/pipeline/
